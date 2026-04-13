@@ -120,6 +120,7 @@ class _LauncherPageViewState extends State<LauncherPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           PageView(

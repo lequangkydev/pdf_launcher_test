@@ -14,18 +14,9 @@ class PdfReaderScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.history),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.star_border),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.history), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.star_border), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.settings), onPressed: () {}),
         ],
       ),
       body: SingleChildScrollView(
@@ -38,8 +29,6 @@ class PdfReaderScreen extends StatelessWidget {
             _buildFeatureGrid(),
             const SizedBox(height: 16),
             // Ad placeholder
-            _buildAdPlaceholder(),
-            const SizedBox(height: 16),
           ],
         ),
       ),
@@ -84,7 +73,11 @@ class PdfReaderScreen extends StatelessWidget {
                       color: Colors.white,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.lock, color: Color(0xFFE91E4C), size: 14),
+                    child: const Icon(
+                      Icons.lock,
+                      color: Color(0xFFE91E4C),
+                      size: 14,
+                    ),
                   ),
                 ),
               ],
@@ -97,7 +90,11 @@ class PdfReaderScreen extends StatelessWidget {
               children: [
                 const Text(
                   'In order to read and edit all your files, please allow to access all your files on your device.',
-                  style: TextStyle(fontSize: 13, color: Colors.black87, height: 1.4),
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.black87,
+                    height: 1.4,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Center(
@@ -109,7 +106,10 @@ class PdfReaderScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 10,
+                      ),
                     ),
                     child: const Text('Allow', style: TextStyle(fontSize: 15)),
                   ),
@@ -124,15 +124,60 @@ class PdfReaderScreen extends StatelessWidget {
 
   Widget _buildFeatureGrid() {
     final features = [
-      _FeatureItem('Merge PDF', Icons.add_box_outlined, const Color(0xFFFFEBEE), const Color(0xFFE91E4C)),
-      _FeatureItem('Split PDF', Icons.vertical_split, const Color(0xFFE8F5E9), const Color(0xFF4CAF50)),
-      _FeatureItem('Image to PDF', Icons.picture_as_pdf, const Color(0xFFFFF8E1), const Color(0xFFFFA000)),
-      _FeatureItem('Scan PDF', Icons.camera_alt_outlined, const Color(0xFFE8F5E9), const Color(0xFF66BB6A)),
-      _FeatureItem('Lock PDF', Icons.lock_outline, const Color(0xFFF3E5F5), const Color(0xFFAB47BC)),
-      _FeatureItem('UnLock PDF', Icons.lock_open, const Color(0xFFFFF3E0), const Color(0xFFFF9800)),
-      _FeatureItem('Edit PDF', Icons.edit_note, const Color(0xFFE3F2FD), const Color(0xFF42A5F5)),
-      _FeatureItem('Favorite', Icons.favorite_border, const Color(0xFFE8F5E9), const Color(0xFF5C6BC0)),
-      _FeatureItem('All File', Icons.folder_copy_outlined, const Color(0xFFE0F7FA), const Color(0xFF26A69A)),
+      _FeatureItem(
+        'Merge PDF',
+        Icons.add_box_outlined,
+        const Color(0xFFFFEBEE),
+        const Color(0xFFE91E4C),
+      ),
+      _FeatureItem(
+        'Split PDF',
+        Icons.vertical_split,
+        const Color(0xFFE8F5E9),
+        const Color(0xFF4CAF50),
+      ),
+      _FeatureItem(
+        'Image to PDF',
+        Icons.picture_as_pdf,
+        const Color(0xFFFFF8E1),
+        const Color(0xFFFFA000),
+      ),
+      _FeatureItem(
+        'Scan PDF',
+        Icons.camera_alt_outlined,
+        const Color(0xFFE8F5E9),
+        const Color(0xFF66BB6A),
+      ),
+      _FeatureItem(
+        'Lock PDF',
+        Icons.lock_outline,
+        const Color(0xFFF3E5F5),
+        const Color(0xFFAB47BC),
+      ),
+      _FeatureItem(
+        'UnLock PDF',
+        Icons.lock_open,
+        const Color(0xFFFFF3E0),
+        const Color(0xFFFF9800),
+      ),
+      _FeatureItem(
+        'Edit PDF',
+        Icons.edit_note,
+        const Color(0xFFE3F2FD),
+        const Color(0xFF42A5F5),
+      ),
+      _FeatureItem(
+        'Favorite',
+        Icons.favorite_border,
+        const Color(0xFFE8F5E9),
+        const Color(0xFF5C6BC0),
+      ),
+      _FeatureItem(
+        'All File',
+        Icons.folder_copy_outlined,
+        const Color(0xFFE0F7FA),
+        const Color(0xFF26A69A),
+      ),
     ];
 
     return Padding(
@@ -191,40 +236,6 @@ class PdfReaderScreen extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildAdPlaceholder() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade900,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade700,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: const Text(
-                'AD',
-                style: TextStyle(color: Colors.white, fontSize: 10),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Ad Placeholder',
-              style: TextStyle(color: Colors.grey.shade500, fontSize: 14),
-            ),
-          ],
-        ),
       ),
     );
   }

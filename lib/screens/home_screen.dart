@@ -14,7 +14,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   List<Map<String, dynamic>> _allApps = [];
   List<Map<String, dynamic>> _dockApps = [];
   List<Map<String, dynamic>> _homeApps = [];
-  Uint8List? _wallpaperBytes;
   bool _loading = true;
 
   @override
@@ -23,20 +22,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   @override
   void initState() {
     super.initState();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    await Future.wait([_loadWallpaper(), _loadApps()]);
-  }
-
-  Future<void> _loadWallpaper() async {
-    try {
-      final result = await _channel.invokeMethod('getWallpaper');
-      if (result != null && mounted) {
-        setState(() => _wallpaperBytes = base64Decode(result as String));
-      }
-    } catch (_) {}
+    _loadApps();
   }
 
   Future<void> _loadApps() async {
@@ -89,54 +75,34 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           _showAppDrawer();
         }
       },
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // === Real device wallpaper ===
-          if (_wallpaperBytes != null)
-            Image.memory(
-              _wallpaperBytes!,
-              fit: BoxFit.cover,
-              gaplessPlayback: true,
-            )
-          else
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xFF667eea), Color(0xFF764ba2)],
-                ),
-              ),
-            ),
+      // Transparent background - system wallpaper shows through natively
+      child: Container(
+        color: Colors.transparent,
+        child: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 8),
 
-          // === Overlay content ===
-          SafeArea(
-            child: Column(
-              children: [
-                const SizedBox(height: 8),
+              // PDF Widget bar at top (like One PDF Home)
+              _buildPdfWidget(),
 
-                // PDF Widget bar at top (like One PDF Home)
-                _buildPdfWidget(),
+              // Spacer - wallpaper visible area (real device wallpaper behind)
+              const Spacer(),
 
-                // Spacer - wallpaper visible area
-                const Spacer(),
+              // Home apps (2 rows of 4)
+              if (!_loading && _homeApps.isNotEmpty) _buildHomeApps(),
+              const SizedBox(height: 16),
 
-                // Home apps (2 rows of 4)
-                if (!_loading && _homeApps.isNotEmpty) _buildHomeApps(),
-                const SizedBox(height: 16),
+              // Swipe up hint
+              _buildSwipeUpHint(),
+              const SizedBox(height: 6),
 
-                // Swipe up hint
-                _buildSwipeUpHint(),
-                const SizedBox(height: 6),
-
-                // Dock at bottom
-                if (!_loading) _buildDock(),
-                const SizedBox(height: 8),
-              ],
-            ),
+              // Dock at bottom
+              if (!_loading) _buildDock(),
+              const SizedBox(height: 8),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
