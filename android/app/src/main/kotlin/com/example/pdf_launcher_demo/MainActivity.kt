@@ -1,5 +1,6 @@
 package com.example.pdf_launcher_demo
 
+import android.app.WallpaperManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -12,6 +13,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.Settings
 import android.util.Base64
+import android.util.DisplayMetrics
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
@@ -58,6 +60,12 @@ class MainActivity : FlutterActivity() {
                         Thread {
                             val files = getPdfFiles()
                             runOnUiThread { result.success(files) }
+                        }.start()
+                    }
+                    "getWallpaper" -> {
+                        Thread {
+                            val wallpaper = getWallpaperBase64()
+                            runOnUiThread { result.success(wallpaper) }
                         }.start()
                     }
                     else -> result.notImplemented()
@@ -187,6 +195,40 @@ class MainActivity : FlutterActivity() {
         }
 
         return pdfFiles.sortedByDescending { it["lastModified"] as Long }
+    }
+
+    private fun getWallpaperBase64(): String? {
+        return try {
+            val wallpaperManager = WallpaperManager.getInstance(this)
+            @Suppress("DEPRECATION")
+            val drawable = wallpaperManager.drawable ?: return null
+
+            // Get screen dimensions for proper scaling
+            val metrics = DisplayMetrics()
+            @Suppress("DEPRECATION")
+            windowManager.defaultDisplay.getMetrics(metrics)
+            val screenWidth = metrics.widthPixels
+            val screenHeight = metrics.heightPixels
+
+            val bitmap = drawableToBitmapFull(drawable, screenWidth, screenHeight)
+            val stream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream)
+            val bytes = stream.toByteArray()
+            Base64.encodeToString(bytes, Base64.NO_WRAP)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun drawableToBitmapFull(drawable: Drawable, width: Int, height: Int): Bitmap {
+        if (drawable is BitmapDrawable && drawable.bitmap != null) {
+            return Bitmap.createScaledBitmap(drawable.bitmap, width, height, true)
+        }
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, width, height)
+        drawable.draw(canvas)
+        return bitmap
     }
 
     private fun searchPdfFiles(
